@@ -1,6 +1,8 @@
 package buildings;
 
+import java.awt.*;
 import java.io.*;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Comparator;
 import java.util.Scanner;
 
@@ -25,6 +27,11 @@ public class Buildings {
         return create;
     }
 
+    public static Space createSpace(Class < ? extends Space> spaceClass, int roomsCount, double area) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
+        Space create = spaceClass.getDeclaredConstructor(int.class, double.class).newInstance(roomsCount, area);
+        return create;
+    }
+
     public static Floor createFloor(int spaceCount){
         Floor create = factory.createFloor(spaceCount);
         return create;
@@ -35,6 +42,11 @@ public class Buildings {
         return create;
     }
 
+    public static Floor createFloor(Class<? extends Floor> floorClass, Space... spaces) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
+        Floor create = floorClass.getDeclaredConstructor(Space[].class).newInstance((Object) spaces);
+        return create;
+    }
+
     public static Building createBuilding(int floorsCount, int[] spacesCounts){
         Building create = factory.createBuilding(floorsCount, spacesCounts);
         return create;
@@ -42,6 +54,11 @@ public class Buildings {
 
     public static Building createBuilding(Floor[] floors){
         Building create = factory.createBuilding(floors);
+        return create;
+    }
+
+    public static Building createBuilding(Class<? extends Building> buildingClass, Floor... floors) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
+        Building create = buildingClass.getDeclaredConstructor(Floor[].class).newInstance((Object) floors);
         return create;
     }
 
@@ -268,38 +285,44 @@ public class Buildings {
         }
 
         int floors_num = (int)token.nval;
-        Floor[] floors = new Floor[floors_num];
-        int spaces_number;
-        int rooms;
-        double square;
-        for(int i = 0; i < floors_num; ++i){
-            try {
-                token.nextToken();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            spaces_number = (int)token.nval;
-
-            floors[i] = createFloor(spaces_number);
-            for(int space_index = 0; space_index < spaces_number; ++space_index) {
-
-                try {
-                    token.nextToken();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                rooms = (int)token.nval;
-                try {
-                    token.nextToken();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                square = (double)token.nval;
-                floors[i].changeSpace(space_index,createSpace(square,rooms));
-            }
+        if(floors_num == 0){
+            return null;
         }
-        Building building = createBuilding(floors);
-        return building;
+        else {
+            Floor[] floors = new Floor[floors_num];
+            int spaces_number;
+            int rooms;
+            double square;
+            for (int i = 0; i < floors_num; ++i) {   //Analyze Floors
+                try {
+                    token.nextToken();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                spaces_number = (int) token.nval;
+
+                floors[i] = createFloor(spaces_number);
+                for (int space_index = 0; space_index < spaces_number; ++space_index) {
+
+                    try {
+                        token.nextToken();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    rooms = (int) token.nval;
+                    try {
+                        token.nextToken();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    square = token.nval;
+                    floors[i].changeSpace(space_index, createSpace(square, rooms));
+                }
+            }
+
+            Building building = createBuilding(floors);
+            return building;
+        }
 
     }
 

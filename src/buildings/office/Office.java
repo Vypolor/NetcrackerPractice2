@@ -15,7 +15,7 @@ public class Office implements Space, Serializable, Cloneable {
     final int ROOMS = 1;
 
     public void throwSquare(double square) throws InvalidSpaceAreaException {
-        if(square < 30 || square > 500) throw new InvalidSpaceAreaException(square);
+        if(square < 20 || square > 500) throw new InvalidSpaceAreaException(square);
     }
 
     public void throwRooms(int rooms) throws InvalidRoomsCountException {

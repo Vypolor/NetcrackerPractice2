@@ -122,9 +122,10 @@ public class Runner {
         Space tmpo7 = new Flat(65,3);
         Space office = new OfficeFactory().createSpace(254);
         System.out.println(office.compareTo(office));
+        */
         // ======================================== 7 ============================================
-        Floor floor = new DwellingFloor(100);
-        Floor floor1 = new DwellingFloor(4);*/
+        Floor floor = new DwellingFloor(10);
+        Floor floor1 = new DwellingFloor(4);
         /*Thread th = new Repairer(floor);
         Thread th1 = new Repairer(floor);
         Thread th2 = new Repairer(floor);
@@ -134,14 +135,17 @@ public class Runner {
         th1.start();
         th2.start();
         th3.start();*/
-       /* Semaphore semaphore = new Semaphore(2);
+
+        Semaphore semaphore = new Semaphore(100);
         SequentalRepairer t = new SequentalRepairer(semaphore, floor);
-        SequentalCleaner t1 = new SequentalCleaner(semaphore, floor);*/
+        SequentalCleaner t1 = new SequentalCleaner(semaphore, floor);
         /*SequentalRepairer t3 = new SequentalRepairer(semaphore1, floor1);
         SequentalCleaner t2 = new SequentalCleaner(semaphore1, floor1);*/
 
-        /*new Thread(t).start();
-        new Thread(t1).start();*/
+        for (int i = 0; i < 100; ++i) {
+            new Thread(t).start();
+            new Thread(t1).start();
+        }
         /*new Thread(t3).start();
         new Thread(t2).start();*/
         //new Thread(t2).start();
